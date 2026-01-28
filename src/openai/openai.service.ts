@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 
-/**
- * Function schema for searchProducts tool
- * Defines the structure that OpenAI will use to call the product search function
- */
+// Function schema for searchProducts tool
+// Defines the structure that OpenAI will use to call the product search function
+
 const searchProductsFunction = {
   name: 'searchProducts',
   description:
@@ -23,10 +22,8 @@ const searchProductsFunction = {
   },
 };
 
-/**
- * Function schema for convertCurrencies tool
- * Defines the structure that OpenAI will use to call the currency conversion function
- */
+// Function schema for convertCurrencies tool
+// Defines the structure that OpenAI will use to call the currency conversion function
 const convertCurrenciesFunction = {
   name: 'convertCurrencies',
   description:
@@ -51,20 +48,15 @@ const convertCurrenciesFunction = {
   },
 };
 
-/**
- * Service responsible for interacting with OpenAI's Chat Completion API
- * Handles function calling setup and chat completion requests
- */
+// Service responsible for interacting with OpenAI's Chat Completion API
+// Handles function calling setup and chat completion requests
 @Injectable()
 export class OpenAIService {
   private openai: OpenAI;
-  private model: string;
 
   constructor(private configService: ConfigService) {
     // Initialize OpenAI client with API key from configuration
     const apiKey = this.configService.get<string>('app.openaiApiKey');
-    this.model =
-      this.configService.get<string>('app.openaiModel') || 'gpt-3.5-turbo';
 
     if (!apiKey) {
       throw new Error(
@@ -116,12 +108,12 @@ export class OpenAIService {
       },
     ];
 
-    console.log("messages -> ", messages);  
+    console.log('messages -> ', messages);
 
     try {
       // Make request to OpenAI Chat Completion API with function calling
       const completion = await this.openai.chat.completions.create({
-        model: this.model,
+        model: 'gpt-4o-mini', // Using gpt-4o-mini for cost efficiency, can be changed to gpt-4 if needed
         messages: messages,
         tools: this.getFunctionDefinitions(),
         tool_choice: 'auto', // Let the model decide when to call functions
@@ -136,17 +128,8 @@ export class OpenAIService {
     }
   }
 
-  /**
-   * Creates a follow-up chat completion after function execution
-   * This call includes the function results so the LLM can generate a final response
-   *
-   * @param userMessage - The original user query
-   * @param functionName - Name of the function that was executed
-   * @param functionResult - The result returned by the executed function
-   * @param toolCallId - The ID of the tool call from the initial request
-   * @param conversationHistory - Optional array of previous messages for context
-   * @returns OpenAI chat completion response with final answer
-   */
+  // Creates a follow-up chat completion after function execution
+  // This call includes the function results so the LLM can generate a final response
   async createFollowUpCompletion(
     userMessage: string,
     functionName: string,
@@ -192,7 +175,7 @@ export class OpenAIService {
     try {
       // Make request to OpenAI Chat Completion API to generate final response
       const completion = await this.openai.chat.completions.create({
-        model: this.model,
+        model: 'gpt-4o-mini',
         messages: messages,
         temperature: 0.7,
       });

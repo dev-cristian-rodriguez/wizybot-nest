@@ -1,98 +1,174 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Wizybot Chatbot API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS-based chatbot API that uses OpenAI's Chat Completion API with Function Calling to provide intelligent customer support. The chatbot can search for products in a catalog and convert currencies using real-time exchange rates.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **Product Search**: Search for products in the store catalog using natural language queries
+- **Currency Conversion**: Convert prices between different currencies using Open Exchange Rates API
+- **OpenAI Function Calling**: Leverages OpenAI's function calling capability for intelligent tool selection
+- **Swagger Documentation**: Automatic API documentation available at `/api`
+- **TypeScript**: Fully typed codebase with DTOs and validation
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Prerequisites
 
-## Project setup
+Before running the application, ensure you have:
 
+- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- Open Exchange Rates API key ([Get one here](https://openexchangerates.org/api) - free tier available)
+
+## Installation
+
+1. Clone the repository:
 ```bash
-$ npm install
+git clone <repository-url>
+cd wizybot-nest
 ```
 
-## Compile and run the project
-
+2. Install dependencies:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
-
+3. Create a `.env` file in the root directory:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+4. Update the `.env` file with your API keys:
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+OPEN_EXCHANGE_RATES_API_KEY=your_open_exchange_rates_api_key_here
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Running the Application
 
-## Resources
+### Development Mode
 
-Check out a few resources that may come in handy when working with NestJS:
+Run the application in development mode with hot-reload:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run start:dev
+```
 
-## Support
+The application will start on `http://localhost:3000` (or the port specified in your `.env` file).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Production Mode
 
-## Stay in touch
+Build and run the application:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run build
+npm run start:prod
+```
 
-## License
+## API Documentation
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Once the application is running, you can access the Swagger documentation at:
+
+```
+http://localhost:3000/api
+```
+
+This provides an interactive interface to test the API endpoints.
+
+## API Endpoint
+
+### POST /chat
+
+Send a query to the chatbot and receive a response.
+
+**Request Body:**
+```json
+{
+  "query": "I am looking for a phone"
+}
+```
+
+**Response:**
+```json
+{
+  "response": "I found some phones for you. Here are 2 options: ..."
+}
+```
+
+## Example Requests
+
+### Using cURL
+
+```bash
+# Search for products
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"query": "I am looking for a phone"}'
+
+# Search for a present
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"query": "I am looking for a present for my dad"}'
+
+# Ask about product price
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"query": "How much does a watch costs?"}'
+
+# Convert currency
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"query": "What is the price of the watch in Euros"}'
+
+# Currency conversion
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"query": "How many Canadian Dollars are 350 Euros"}'
+```
+
+## How It Works
+
+The chatbot follows this flow:
+
+1. **User Query**: User sends a query to the `/chat` endpoint
+2. **Initial OpenAI Call**: The system calls OpenAI with the user query and available function definitions
+3. **Function Detection**: OpenAI determines if a function should be called (searchProducts or convertCurrencies)
+4. **Function Execution**: If needed, the appropriate function is executed:
+   - `searchProducts()`: Searches the CSV file for relevant products
+   - `convertCurrencies()`: Fetches exchange rates and converts the amount
+5. **Final Response**: OpenAI generates a final response using the function results
+6. **Response to User**: The final response is returned to the user
+
+## Testing
+
+Test the chatbot with the following example queries:
+
+- "I am looking for a phone"
+- "I am looking for a present for my dad"
+- "How much does a watch costs?"
+- "What is the price of the watch in Euros"
+- "How many Canadian Dollars are 350 Euros"
+
+## Error Handling
+
+The API handles various error scenarios:
+
+- **Missing API Keys**: Returns 500 error with configuration message
+- **Invalid Request**: Returns 400 error for validation failures
+- **Service Unavailable**: Returns 500 error if external APIs are unavailable
+- **No Products Found**: Returns appropriate message when no products match the query
+
+## Development
+
+### Running Tests
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+```
+
+### Building
+
+```bash
+npm run build
+```

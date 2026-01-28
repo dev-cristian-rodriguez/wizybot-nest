@@ -7,6 +7,13 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    const v: boolean = true;
+
+    return v ? this.appService.getHello() : 'False';
   }
+
+  // @Post('chat')
+  // chat(@Body() body: { query: string }): string {
+  //   return this.appService.chat(body.query);
+  // }
 }
