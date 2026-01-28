@@ -6,7 +6,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  app.enableCors({
+    origin: 'https://wizybot-react.onrender.com',
+    credentials: true,
+  });
 
   // Global validation pipe to validate DTOs automatically
   app.useGlobalPipes(
