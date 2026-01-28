@@ -13,7 +13,7 @@ A NestJS-based chatbot API that uses OpenAI's Chat Completion API with Function 
 ## Prerequisites
 
 Before running the application, ensure you have:
-
+- Node version > 18
 - OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
 - Open Exchange Rates API key ([Get one here](https://openexchangerates.org/api) - free tier available)
 
