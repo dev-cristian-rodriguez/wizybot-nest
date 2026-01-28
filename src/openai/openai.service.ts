@@ -108,7 +108,10 @@ export class OpenAIService {
       },
     ];
 
-    console.log('messages -> ', messages);
+    // console.log(
+    //   'Making initial OpenAI call for query:',
+    //   userMessage.substring(0, 50),
+    // );
 
     try {
       // Make request to OpenAI Chat Completion API with function calling
@@ -119,6 +122,13 @@ export class OpenAIService {
         tool_choice: 'auto', // Let the model decide when to call functions
         temperature: 0.7, // Balance between creativity and consistency
       });
+
+      // const hasToolCalls =
+      //   (completion.choices[0]?.message?.tool_calls?.length ?? 0) > 0;
+      // console.log(
+      //   'OpenAI response received, tool calls:',
+      //   hasToolCalls ? 'yes' : 'no',
+      // );
 
       return completion;
     } catch (error) {
@@ -172,6 +182,8 @@ export class OpenAIService {
       },
     ];
 
+    // console.log(`Generating final response after ${functionName} execution`);
+
     try {
       // Make request to OpenAI Chat Completion API to generate final response
       const completion = await this.openai.chat.completions.create({
@@ -179,6 +191,8 @@ export class OpenAIService {
         messages: messages,
         temperature: 0.7,
       });
+
+      // console.log('Final response generated successfully');
 
       return completion;
     } catch (error) {

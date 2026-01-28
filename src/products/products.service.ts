@@ -76,12 +76,14 @@ export class ProductsService implements OnModuleInit {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async searchProducts(query: string): Promise<Product[]> {
     if (!query || query.trim().length === 0) {
       return [];
     }
 
     if (this.products.length === 0) {
+      // console.log('No products loaded, cannot search');
       return [];
     }
 
@@ -134,6 +136,12 @@ export class ProductsService implements OnModuleInit {
       .sort((a, b) => b.score - a.score)
       .slice(0, 2)
       .map((item) => item.product);
+
+    // if (sortedProducts.length > 0) {
+    //   console.log(`Product search completed: ${sortedProducts.length} results for "${query}"`);
+    // } else {
+    //   console.log(`No products found matching "${query}"`);
+    // }
 
     return sortedProducts;
   }

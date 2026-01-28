@@ -63,6 +63,8 @@ export class CurrencyService {
     // Get exchange rates (from cache or API)
     const rates = await this.getExchangeRates();
 
+    // console.log(`Converting ${amount} ${from} to ${to}`);
+
     // Check if both currencies are available
     if (!rates[from]) {
       throw new Error(`Source currency '${from}' not found in exchange rates`);
@@ -79,7 +81,10 @@ export class CurrencyService {
     const convertedAmount =
       to === 'USD' ? amountInUSD : amountInUSD * rates[to];
 
-    return Math.round(convertedAmount * 100) / 100; // Round to 2 decimal places
+    const result = Math.round(convertedAmount * 100) / 100; // Round to 2 decimal places
+    // console.log(`Currency conversion: ${amount} ${from} = ${result} ${to}`);
+
+    return result;
   }
 
   // Fetches exchange rates from Open Exchange Rates API
@@ -89,9 +94,11 @@ export class CurrencyService {
 
     // Return cached rates if still valid
     if (this.exchangeRatesCache && now - this.cacheTimestamp < this.cacheTTL) {
+      // console.log('Using cached exchange rates');
       return this.exchangeRatesCache;
     }
 
+    // console.log('Fetching latest exchange rates from API');
     try {
       // Fetch latest exchange rates from API
       const response = await firstValueFrom(
@@ -109,6 +116,7 @@ export class CurrencyService {
       this.exchangeRatesCache = response.data.rates;
       this.cacheTimestamp = now;
 
+      // console.log('Exchange rates updated, cache refreshed');
       return this.exchangeRatesCache;
     } catch (error) {
       // If API call fails but we have cached data, use cache

@@ -22,6 +22,8 @@ export class ChatbotService {
   // 3. Follow-up OpenAI call with function results to generate final response
 
   async processQuery(query: string): Promise<string> {
+    // console.log('Processing user query:', query);
+
     try {
       // Step 1: Make initial call to OpenAI with function definitions
       const initialCompletion =
@@ -42,13 +44,17 @@ export class ChatbotService {
         const functionArgs = JSON.parse(toolCall.function.arguments || '{}');
         const toolCallId: string = toolCall.id;
 
+        // console.log(`Executing function: ${functionName}`, functionArgs);
+
         // Step 3: Execute the appropriate function
         let functionResult: any;
 
         if (functionName === 'searchProducts') {
           // Execute product search
+          const searchQuery = functionArgs.query || query;
+          // console.log('Searching products with query:', searchQuery);
           const products = await this.productsService.searchProducts(
-            functionArgs.query || query,
+            searchQuery,
           );
 
           // Format products for the LLM
@@ -63,8 +69,10 @@ export class ChatbotService {
             })),
             count: products.length,
           };
+          // console.log(`Found ${products.length} products`);
         } else if (functionName === 'convertCurrencies') {
           // Execute currency conversion
+          // console.log(`Converting ${functionArgs.amount} ${functionArgs.fromCurrency} to ${functionArgs.toCurrency}`);
           const convertedAmount = await this.currencyService.convertCurrencies(
             functionArgs.amount,
             functionArgs.fromCurrency,
@@ -77,6 +85,7 @@ export class ChatbotService {
             toCurrency: functionArgs.toCurrency,
             convertedAmount: convertedAmount,
           };
+          // console.log(`Conversion result: ${convertedAmount} ${functionArgs.toCurrency}`);
         } else {
           throw new Error(`Unknown function: ${functionName}`);
         }
@@ -96,9 +105,11 @@ export class ChatbotService {
           throw new Error('No final response from OpenAI');
         }
 
+        // console.log('Query processed successfully');
         return finalMessage.content;
       } else {
         // No function call needed, return the direct response
+        // console.log('Direct response (no function call needed)');
         return (
           message.content || 'I apologize, but I could not generate a response.'
         );
