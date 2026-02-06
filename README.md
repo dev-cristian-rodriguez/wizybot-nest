@@ -13,53 +13,109 @@ A NestJS-based chatbot API that uses OpenAI's Chat Completion API with Function 
 ## Prerequisites
 
 Before running the application, ensure you have:
-- Node version > 18
-- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
-- Open Exchange Rates API key ([Get one here](https://openexchangerates.org/api) - free tier available)
+- **Node.js** version 18 or higher (Node 22 recommended)
+- **Docker & Docker Compose** (optional, for containerized setup)
+- **OpenAI API key** ([Get one here](https://platform.openai.com/api-keys))
+- **Open Exchange Rates API key** ([Get one here](https://openexchangerates.org/api) - free tier available)
 
-## Installation
+---
 
-1. Clone the repository:
+## Running the Application Locally (Step by Step)
+
+This guide is for new developers. Choose one of the two options below.
+
+### Option A: Run with npm (Local Development)
+
+Best for active development with hot-reload.
+
+#### Step 1: Clone the repository
 ```bash
 git clone <repository-url>
 cd wizybot-nest
 ```
 
-2. Install dependencies:
+#### Step 2: Install dependencies
 ```bash
 npm install
 ```
 
-3. Create a `.env` file in the root directory:
+#### Step 3: Create environment file
 ```bash
 cp .env.example .env
 ```
 
-4. Update the `.env` file with your API keys:
+#### Step 4: Configure API keys
+Edit `.env` and add your keys:
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
 OPEN_EXCHANGE_RATES_API_KEY=your_open_exchange_rates_api_key_here
 ```
 
-## Running the Application
-
-### Development Mode
-
-Run the application in development mode with hot-reload:
-
+#### Step 5: Run the application
 ```bash
 npm run start:dev
 ```
 
-The application will start on `http://localhost:3000` (or the port specified in your `.env` file).
+The app will start at `http://localhost:3000` with hot-reload enabled.
 
-### Production Mode
+---
 
-Build and run the application:
+### Option B: Run with Docker
 
+Best for production-like setup or when you prefer not to install Node.js locally.
+
+#### Step 1: Clone the repository
+```bash
+git clone <repository-url>
+cd wizybot-nest
+```
+
+#### Step 2: Create environment file
+```bash
+cp .env.example .env
+```
+
+#### Step 3: Configure API keys
+Edit `.env` and add your keys:
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+OPEN_EXCHANGE_RATES_API_KEY=your_open_exchange_rates_api_key_here
+```
+
+#### Step 4: Start the application and database
+```bash
+docker compose up -d
+```
+
+This builds the app image, starts PostgreSQL, and runs the NestJS app. The API will be available at `http://localhost:3000`.
+
+**Useful Docker commands:**
+| Action | Command |
+|--------|---------|
+| Start everything | `docker compose up -d` |
+| Stop everything | `docker compose down` |
+| Start only database | `docker compose up postgres -d` |
+| View logs | `docker compose logs -f app` |
+| Rebuild after code changes | `docker compose up -d --build` |
+
+---
+
+## Running the Application (Summary)
+
+### Development Mode (npm)
+```bash
+npm run start:dev
+```
+
+### Production Mode (npm)
 ```bash
 npm run build
 npm run start:prod
+```
+
+### Production Mode (Docker)
+```bash
+docker compose up -d
 ```
 
 ## API Documentation
@@ -157,8 +213,7 @@ The API handles various error scenarios:
 
 ## Development
 
-### Running Tests
-
+### Running Tests (npm)
 ```bash
 # Unit tests
 npm run test
@@ -167,8 +222,33 @@ npm run test
 npm run test:e2e
 ```
 
-### Building
+### Running Tests with Docker
 
+Use the development Docker image when you want to run tests in a container (same environment as CI).
+
+**Step 1: Build the development image** (required once)
+```bash
+docker build -t wizybot-nest:dev --target development .
+```
+
+**Step 2: Run tests**
+```bash
+# Lint
+docker run --rm wizybot-nest:dev npm run lint
+
+# Unit tests
+docker run --rm wizybot-nest:dev npm run test
+
+# E2E tests (requires PostgreSQL running)
+docker compose up postgres -d
+docker run --rm --network wizybot-nest_default \
+  -e POSTGRES_HOST=postgres -e POSTGRES_PORT=5432 \
+  -e POSTGRES_USER=wizybot -e POSTGRES_PASSWORD=wizybot_secret -e POSTGRES_DB=wizybot_db \
+  wizybot-nest:dev npm run test:e2e
+```
+> **Note:** If the network name differs, run `docker network ls` and use the network that matches your project folder name (e.g. `wizybot-nest_default`).
+
+### Building
 ```bash
 npm run build
 ```
